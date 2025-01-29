@@ -6,19 +6,29 @@ import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
-        /*MultiThread task1 = new MultiThread("Первая задача");
+        MyClass.sayHi();
+    }
+}
+
+class MyClass{
+    public static void sayHi(){
+        System.out.println("Hello world");
+    }
+}
+/*    public static void main(String[] args) {
+        *//*MultiThread task1 = new MultiThread("Первая задача");
         MultiThread task2 = new MultiThread("Вторая задача");
         MultiThread task3 = new MultiThread("Третья задача");
         task1.start();
         task2.start();
-        task3.start();*/
-        /*Thread thread1 = new Thread(new MyRunnableCass("Первая задача"));
+        task3.start();*//*
+        *//*Thread thread1 = new Thread(new MyRunnableCass("Первая задача"));
         Thread thread2 = new Thread(new MyRunnableCass("Вторая задача"));
         Thread thread3 = new Thread(new MyRunnableCass("Третья задача"));
         thread1.start();
         thread2.start();
-        thread3.start();*/
-        /*Thread thread1 = new Thread(new Runnable() {
+        thread3.start();*//*
+        *//*Thread thread1 = new Thread(new Runnable() {
             @Override
             public void run() {
                 for (int i = 0; i < 100; i++) {
@@ -44,7 +54,7 @@ public class Main {
         });
         thread1.start();
         thread2.start();
-        thread3.start();*/
+        thread3.start();*//*
         Thread thread1 = new Thread(()->{
             for (int i = 0; i < 100; i++) {
                 System.out.println("Первая задача"+" "+i);
@@ -64,8 +74,9 @@ public class Main {
         thread2.start();
         thread3.start();
     }
-}
+}*/
 
+/*
 class MyRunnableCass implements Runnable{
     public String task = "";
 
@@ -93,6 +104,7 @@ class MultiThread extends Thread{
         }
     }
 }
+*/
 
 
 /*public class Main {

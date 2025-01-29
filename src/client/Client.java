@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class Client {
     public static void main(String[] args) {
         try {
-            Socket socket = new Socket("127.0.0.1", 9123);
+            Socket socket = new Socket("127.0.0.1", 9123); // Подключаемся к серверу
             Scanner scanner = new Scanner(System.in);
 
             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
@@ -17,7 +17,6 @@ public class Client {
             Thread thread = new Thread(()->{
                 try {
                     while (true){
-                        System.out.println("Введите сообщение: ");
                         String userMsg = scanner.nextLine();
                         out.writeUTF(userMsg);
                     }
