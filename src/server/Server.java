@@ -1,15 +1,20 @@
 package server;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
+import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
+/*
+* serverJson = {
+*   "command": "Команда от сервера",
+*   "error": "сообщение об ошибке",
+*   "msg": "сообщение"
+* }
+* */
 public class Server {
     public static void main(String[] args) {
         ArrayList<User> users = new ArrayList<>();
@@ -27,45 +32,26 @@ public class Server {
                     public void run(){
                         try {
                             String command;
+                            JSONObject jsonObject = new JSONObject();
+                            JSONParser jsonParser = new JSONParser();
+                            jsonObject.put("command", "auth");
                             while (true){
-                                currentUser.getOut().writeUTF("Для регистрации /reg, \n Для авторизации /login");
-                                command = currentUser.getIs().readUTF().toLowerCase();
-                                if(command.equals("/reg")){
-                                    currentUser.getOut().writeUTF("Введите имя: ");
-                                    String name = currentUser.getIs().readUTF();
-                                    currentUser.getOut().writeUTF("Введите фамилию: ");
-                                    String lastname = currentUser.getIs().readUTF();
-                                    currentUser.getOut().writeUTF("Введите логин: ");
-                                    String login = currentUser.getIs().readUTF();
-                                    currentUser.getOut().writeUTF("Введите пароль: ");
-                                    String pass = currentUser.getIs().readUTF();
-                                    String[] params = {name, lastname, login, pass};
-                                    Database.update("INSERT INTO users (name, lastname, login, pass) VALUES (?,?,?,?)", params);
-                                    currentUser.setName(name);
+                                currentUser.getOut().writeUTF(jsonObject.toJSONString());
+                                command = currentUser.getIs().readUTF();
+                                jsonObject = (JSONObject) jsonParser.parse(command);
+                                System.out.println(jsonObject.toJSONString());
+                                if(jsonObject.get("command").toString().equals("reg")){
+                                    currentUser.reg();
                                     break;
-                                } else if (command.equals("/login")) {
-                                    currentUser.getOut().writeUTF("Введите логин: ");
-                                    String login = currentUser.getIs().readUTF();
-                                    currentUser.getOut().writeUTF("Введите пароль: ");
-                                    String pass = currentUser.getIs().readUTF();
-                                    String[] params = {login, pass};
-                                    ResultSet resultSet = Database.query("SELECT * FROM users WHERE login = ? AND pass = ?", params);
-                                    try {
-                                        if(resultSet.next()){
-                                            currentUser.setName(resultSet.getString("name"));
-                                            break;
-                                        }else {
-                                            currentUser.getOut().writeUTF("error");
-                                        }
-                                    }catch (SQLException e){
-                                        e.printStackTrace();
-                                    }
-                                } else {
-                                   currentUser.getOut().writeUTF("неверная команда");
+                                } else if (jsonObject.get("command").toString().equals("login")) {
+                                    if(currentUser.login()) break;
                                 }
+                                jsonObject.put("command", "wrong_data");
+                                currentUser.getOut().writeUTF(jsonObject.toJSONString());
                             }
                             System.out.println(currentUser.getName() + " авторизовался");
-                            currentUser.getOut().writeUTF("success");
+                            jsonObject.put("command", "success");
+                            currentUser.getOut().writeUTF(jsonObject.toJSONString());
                             while (true){
                                 String message = currentUser.getIs().readUTF();
                                 for (User user : users) {

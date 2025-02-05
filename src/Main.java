@@ -3,8 +3,40 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Random;
+import java.util.Scanner;
+
 
 public class Main {
+    public static void main(String[] args) {
+        int[] nums = new int[10];
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Введите 10 чисел:");
+        for (int i = 0; i < 10; i++) {
+            nums[i] = scanner.nextInt();
+        }
+
+        // Находим длину самой длинной последовательности повторяющихся чисел
+        int maxSequenceLength = 1;
+        int currentSequenceLength = 1;
+        for (int i = 1; i < 10; i++) {
+            if (nums[i] == nums[i - 1]) {
+                currentSequenceLength++;
+            } else {
+                maxSequenceLength = Math.max(maxSequenceLength, currentSequenceLength);
+                currentSequenceLength = 1;
+            }
+        }
+        maxSequenceLength = Math.max(maxSequenceLength, currentSequenceLength);
+
+        System.out.println("Длина самой длинной последовательности повторяющихся чисел: " + maxSequenceLength);
+    }
+}
+
+
+
+/*public class Main {
     public static void main(String[] args) {
         MyClass.sayHi();
     }
@@ -14,7 +46,7 @@ class MyClass{
     public static void sayHi(){
         System.out.println("Hello world");
     }
-}
+}*/
 /*    public static void main(String[] args) {
         *//*MultiThread task1 = new MultiThread("Первая задача");
         MultiThread task2 = new MultiThread("Вторая задача");
