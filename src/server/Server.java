@@ -34,9 +34,7 @@ public class Server {
                             String command;
                             JSONObject jsonObject = new JSONObject();
                             JSONParser jsonParser = new JSONParser();
-                            jsonObject.put("command", "auth");
                             while (true){
-                                currentUser.getOut().writeUTF(jsonObject.toJSONString());
                                 command = currentUser.getIs().readUTF();
                                 jsonObject = (JSONObject) jsonParser.parse(command);
                                 System.out.println(jsonObject.toJSONString());
@@ -54,9 +52,13 @@ public class Server {
                             currentUser.getOut().writeUTF(jsonObject.toJSONString());
                             while (true){
                                 String message = currentUser.getIs().readUTF();
+                                jsonObject = (JSONObject) jsonParser.parse(message); // {to: <int:id>, message: <String:msg>}
                                 for (User user : users) {
-                                    if (user != currentUser){
-                                        user.getOut().writeUTF(currentUser.getName()+": "+message);
+                                    int to = Integer.parseInt(jsonObject.get("to").toString()); // Кому отправляем
+                                    String msg = jsonObject.get("message").toString(); // Сообщение
+                                    int from = currentUser.getUserId(); // Кто отправляет
+                                    if (user.getUserId() == to){
+                                        user.getOut().writeUTF(currentUser.getName()+": "+msg);
                                     }
                                 }
                                 System.out.println(currentUser.getName()+": "+message);

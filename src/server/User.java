@@ -13,6 +13,9 @@ import java.sql.SQLException;
 public class User {
     private Socket socket;
     private String name;
+    private String lastname;
+    private String login;
+    private int userId;
     private DataInputStream is;
     private DataOutputStream out;
     private JSONObject jsonObject = new JSONObject();
@@ -39,6 +42,8 @@ public class User {
     public void setName(String name) {
         this.name = name;
     }
+    public int getUserId() {return userId;}
+
     public void reg() throws Exception{
         jsonObject.put("command", "allow_reg");
         this.getOut().writeUTF(jsonObject.toJSONString());
@@ -50,8 +55,10 @@ public class User {
         String login = userData.get("login").toString();
         String pass = userData.get("pass").toString();
         String[] params = {name, lastname, login, pass};
-        Database.update("INSERT INTO users (name, lastname, login, pass) VALUES (?,?,?,?)", params);
-        this.setName(name);
+        this.userId = Database.update("INSERT INTO users (name, lastname, login, pass) VALUES (?,?,?,?)", params);
+        this.lastname = lastname;
+        this.login = login;
+        this.name = name;
     }
     public boolean login() throws Exception{
         jsonObject.put("command", "allow_login");
@@ -66,9 +73,13 @@ public class User {
         try {
             if(resultSet.next()){
                 this.setName(resultSet.getString("name"));
+                this.lastname = resultSet.getString("lastname");
+                this.login = login;
+                this.userId = resultSet.getInt("id");
                 return true;
             }else {
-                this.getOut().writeUTF("error");
+                jsonObject.put("command", "error");
+                this.getOut().writeUTF(jsonObject.toJSONString());
             }
         }catch (SQLException e){
             e.printStackTrace();
