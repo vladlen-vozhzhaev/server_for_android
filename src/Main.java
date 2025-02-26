@@ -6,8 +6,24 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
-
 public class Main {
+    public static void main(String[] args) {
+        Person person1 = new Person("Ivan");
+        Person person2 = new Person("Alex");
+        System.out.println(person1.getHp());
+        System.out.println(person2.getHp());
+        person2.setHp(50);
+        System.out.println(person1.getHp());
+
+
+    }
+}
+
+
+
+
+
+/*public class Main {
     public static void main(String[] args) {
         int[] nums = new int[10];
         Scanner scanner = new Scanner(System.in);
@@ -32,7 +48,7 @@ public class Main {
 
         System.out.println("Длина самой длинной последовательности повторяющихся чисел: " + maxSequenceLength);
     }
-}
+}*/
 
 
 
